@@ -1,0 +1,38 @@
+.container { position: relative; }
+.otp-dialog {
+    position: fixed;
+    inset: 0;
+    width: min(36rem, calc(100% - 2rem));
+    max-height: calc(100% - 2rem);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 0.5rem;
+    color: #181818;
+    background: #ffffff;
+    overflow: auto;
+}
+.otp-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+.otp-dialog .slds-modal__header { position: relative; padding-right: 3rem; }
+.otp-close { position: absolute; top: 0.75rem; right: 0.75rem; }
+.otp-dialog .slds-modal__footer { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 0.5rem; }
+.add-line-button {
+    --slds-c-button-brand-color-background: #2e844a;
+    --slds-c-button-brand-color-border: #2e844a;
+    --slds-c-button-brand-text-color: #ffffff;
+    --slds-c-button-brand-color-background-hover: #22683a;
+    --slds-c-button-brand-color-border-hover: #22683a;
+    --slds-c-button-brand-text-color-hover: #ffffff;
+    --slds-c-button-brand-color-background-active: #194e2b;
+    --slds-c-button-brand-color-border-active: #194e2b;
+    --slds-c-button-brand-text-color-active: #ffffff;
+}
+.subtotal { color: #005fb2; font-weight: 700; }
+.invoice-total { text-align: right; }
+.invoice-total strong { font-weight: 700; }
+.header-fields, .line-fields { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.line-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+fieldset { min-width: 0; }
+@media (max-width: 600px) {
+    .header-fields, .line-fields { grid-template-columns: 1fr; }
+}

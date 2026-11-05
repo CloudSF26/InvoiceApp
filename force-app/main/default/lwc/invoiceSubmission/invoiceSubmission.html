@@ -1,0 +1,58 @@
+<template>
+    <lightning-card title="Submit Invoice" icon-name="standard:orders">
+        <div class="slds-p-around_medium container">
+            <template lwc:if={saving}><lightning-spinner alternative-text="Submitting invoice" size="small"></lightning-spinner></template>
+            <template lwc:if={invoiceId}>
+                <div role="status" class="slds-box slds-theme_success">
+                    <h2 class="slds-text-heading_small">Invoice submitted succesfully.</h2>
+                    <p>Reference: {invoiceNumber}</p>
+                </div>
+            </template>
+            <template lwc:else>
+                <p class="slds-m-bottom_medium">Enter your details and add the work you are invoicing for. All fields are required.</p>
+                <template lwc:if={formError}><div role="alert" class="slds-text-color_error slds-m-bottom_medium">{error}</div></template>
+                <div class="header-fields">
+                    <lightning-input label="Name" name="submitterName" value={submitterName} maxlength="100" required disabled={saving} onchange={handleHeader}></lightning-input>
+                    <lightning-input data-email label="Email" name="email" type="email" value={email} maxlength="80" required disabled={saving} onchange={handleHeader}></lightning-input>
+                </div>
+                <template for:each={rows} for:item="row">
+                    <fieldset key={row.key} class="slds-box slds-m-top_medium">
+                        <legend class="slds-text-heading_small">{row.label}</legend>
+                        <lightning-textarea label="Description of work" data-key={row.key} data-field="description" value={row.description} maxlength="255" required disabled={saving} onchange={handleLine}></lightning-textarea>
+                        <div class="line-fields">
+                            <lightning-combobox label="Payment terms" data-key={row.key} data-field="terms" value={row.terms} options={paymentOptions} required disabled={saving} onchange={handleLine}></lightning-combobox>
+                            <lightning-input label="Units" type="number" data-key={row.key} data-field="units" value={row.units} min="0.01" max="9999" step="0.01" required disabled={saving} onchange={handleLine} message-when-range-underflow="Enter positive units." field-level-help="The existing Units field allows at most four characters, including the decimal point."></lightning-input>
+                            <lightning-input label="Contracted rate" type="number" data-key={row.key} data-field="rate" value={row.rate} min="0" max="999999.99" step="0.01" required disabled={saving} onchange={handleLine}></lightning-input>
+                        </div>
+                        <div class="subtotal slds-m-top_small">Subtotal: $<lightning-formatted-number value={row.subtotal} minimum-fraction-digits="2" maximum-fraction-digits="2"></lightning-formatted-number></div>
+                        <lightning-button class="slds-m-top_small" label="- Remove Item" variant="destructive" data-key={row.key} disabled={row.disableRemove} onclick={removeLine}></lightning-button>
+                    </fieldset>
+                </template>
+                <lightning-button class="add-line-button slds-m-top_medium" label="Add Line Item" variant="brand" icon-name="utility:add" disabled={disableAdd} onclick={addLine}></lightning-button>
+                <p class="invoice-total slds-text-heading_small slds-m-vertical_medium" aria-live="polite"><strong>Invoice Total:</strong> $<lightning-formatted-number value={total} minimum-fraction-digits="2" maximum-fraction-digits="2"></lightning-formatted-number></p>
+                <lightning-button data-submit label="Submit Invoice" variant="brand" disabled={disableSubmit} onclick={handleSubmit}></lightning-button>
+                <lightning-button class="slds-m-left_small" label="Cancel" disabled={saving} onclick={cancelInvoice}></lightning-button>
+                <template lwc:if={otpToken}>
+                    <dialog class="otp-dialog" aria-labelledby="otp-title" aria-describedby="otp-description" oncancel={handleModalCancel}>
+                        <div class="slds-modal__header">
+                            <h2 id="otp-title" class="slds-text-heading_medium">Verify Your Email</h2>
+                            <lightning-button-icon class="otp-close" icon-name="utility:close" alternative-text="Close verification" title="Close verification" disabled={saving} onclick={closeOtp}></lightning-button-icon>
+                        </div>
+                        <div class="slds-p-around_medium">
+                            <template lwc:if={saving}><lightning-spinner alternative-text="Processing verification" size="small"></lightning-spinner></template>
+                            <p id="otp-description">A six-digit code was sent to {email}. Enter it below to accept your invoice. The code expires in 10 minutes.</p>
+                            <template lwc:if={error}><div role="alert" class="slds-text-color_error slds-m-top_small">{error}</div></template>
+                            <lightning-input data-otp label="Email verification code" type="text" value={otpCode} pattern="[0-9]{6}" minlength="6" maxlength="6" required disabled={saving} onchange={handleOtp} message-when-pattern-mismatch="Enter the six-digit code from your email."></lightning-input>
+                            <p class="slds-m-top_small">Wait 60 seconds before resending. Changing invoice details requires a new code.</p>
+                        </div>
+                        <div class="slds-modal__footer">
+                            <lightning-button label="Cancel" disabled={saving} onclick={closeOtp}></lightning-button>
+                            <lightning-button class="slds-m-left_small" label="Resend Code" disabled={saving} onclick={resendOtp}></lightning-button>
+                            <lightning-button class="slds-m-left_small" label="Verify &amp; Submit Invoice" variant="brand" disabled={saving} onclick={verifyOtp}></lightning-button>
+                        </div>
+                    </dialog>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

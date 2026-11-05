@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>68.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Site Header / Footer</masterLabel>
+    <description>Responsive branding image from the HeaderFooter static resource. Add an instance to each desired site region.</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="alternativeText" type="String" label="Image alternative text" default="Site branding" description="Describe the image for screen readers. Leave blank for a decorative image." />
+            <property name="imagePath" type="String" label="Image path inside ZIP (optional)" description="Leave blank for a single image resource. For a ZIP resource, enter the relative image path, such as images/header.png." />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
