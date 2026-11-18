@@ -6,6 +6,7 @@ Built with Lightning Web Components (LWC), Apex, and Salesforce custom objects.
 
 ## Live Demo
 
+**OPEN LINK IN INCOGNITO WINDOW** || 
 **Visit:** https://ashish-9134-dev-ed.my.site.com/submit
 
 Invoice submission requires an authorized, signed-in Salesforce site account. Email OTP verification confirms access to the entered email address; it does not replace site authentication.
